@@ -16,6 +16,7 @@ void Ball::doCreate()
     b2FixtureDef fixtureDef;
     fixtureDef.density = 1.0f;
     fixtureDef.friction = 5.0f;
+    fixtureDef.restitution = 0.8f;
     b2CircleShape circleCollider {};
     circleCollider.m_radius = 4.0f;
     fixtureDef.shape = &circleCollider;

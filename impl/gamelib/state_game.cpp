@@ -1,9 +1,11 @@
 ﻿#include "state_game.hpp"
 #include "box2dwrapper/box2d_world_impl.hpp"
+#include "collision.hpp"
 #include "color.hpp"
 #include "game_interface.hpp"
 #include "game_properties.hpp"
 #include "hud/hud.hpp"
+#include "random/random.hpp"
 #include "shape.hpp"
 #include "sprite.hpp"
 #include "state_menu.hpp"
@@ -50,6 +52,15 @@ void StateGame::doInternalCreate()
 
     createWalls();
 
+    m_PaddleLeft = std::make_shared<jt::Shape>();
+    m_PaddleLeft->makeRect(jt::Vector2f { 48, 48 }, getGame()->gfx().textureManager());
+    m_PaddleLeft->setColor(jt::colors::Transparent);
+    m_PaddleLeft->setPosition(jt::Vector2f { 96 - 32, 400 - 48 });
+
+    m_PaddleRight = std::make_shared<jt::Shape>();
+    m_PaddleRight->makeRect(jt::Vector2f { 48, 48 }, getGame()->gfx().textureManager());
+    m_PaddleRight->setColor(jt::colors::Transparent);
+    m_PaddleRight->setPosition(jt::Vector2f { 300 - 96 - 48 + 32, 400 - 48 });
     // StateGame will call drawObjects itself.
     setAutoDraw(false);
 }
@@ -103,19 +114,49 @@ void StateGame::doInternalUpdate(float const elapsed)
     if (m_running) {
         m_world->step(elapsed, GP::PhysicVelocityIterations(), GP::PhysicPositionIterations());
         // update game logic here
+        auto const bp = m_ball->getPosition();
+
         if (getGame()->input().keyboard()->justPressed(jt::KeyCode::A)) {
-            m_scoreP1++;
-            m_hud->getObserverScoreP1()->notify(m_scoreP1);
+            m_PaddleLeft->flash(0.4f, GP::getPalette().getColor(4));
+            auto const pp = m_PaddleLeft->getPosition();
+            if (bp.y > pp.y && bp.y < pp.y + m_PaddleLeft->getGlobalBounds().height) {
+                if (bp.x > pp.x && bp.x < pp.x + m_PaddleLeft->getGlobalBounds().width) {
+                    auto oldV = m_ball->getVelocity();
+                    float vxOffset = jt::Random::getFloatGauss(-10, 5);
+                    if (oldV.y > 0) {
+                        oldV.y = -oldV.y - jt::Random::getFloatGauss(+10, 5);
+                    } else {
+                        oldV.y = -200;
+                    }
+                    m_ball->setVelocity(jt::Vector2f { oldV.x + vxOffset, oldV.y });
+                }
+            }
         }
+        
         if (getGame()->input().keyboard()->justPressed(jt::KeyCode::D)) {
-            m_scoreP2++;
-            m_hud->getObserverScoreP2()->notify(m_scoreP2);
+            m_PaddleRight->flash(0.4f, GP::getPalette().getColor(4));
+            auto const pp = m_PaddleRight->getPosition();
+            if (bp.y > pp.y && bp.y < pp.y + m_PaddleRight->getGlobalBounds().height) {
+                if (bp.x > pp.x && bp.x < pp.x + m_PaddleRight->getGlobalBounds().width) {
+                    auto oldV = m_ball->getVelocity();
+                    float vxOffset = jt::Random::getFloatGauss(+10, 5);
+                    if (oldV.y > 0) {
+                        oldV.y = -oldV.y - jt::Random::getFloatGauss(+10, 5);
+                    } else {
+                        oldV.y = -200;
+                    }
+                    m_ball->setVelocity(jt::Vector2f { oldV.x + vxOffset, oldV.y });
+                }
+            }
         }
 
         if (m_ball->getPosition().y > GP::GetScreenSize().y + 32) {
             endGame();
         }
     }
+
+    m_PaddleLeft->update(elapsed);
+    m_PaddleRight->update(elapsed);
 
     m_background->update(elapsed);
     m_vignette->update(elapsed);
@@ -127,6 +168,8 @@ void StateGame::doInternalDraw() const
     m_background->draw(getGame()->gfx().target());
     drawObjects();
     m_ball->draw();
+    m_PaddleLeft->draw(getGame()->gfx().target());
+    m_PaddleRight->draw(getGame()->gfx().target());
     m_vignette->draw(getGame()->gfx().target());
     m_hud->draw();
     m_overlay->draw(getGame()->gfx().target());

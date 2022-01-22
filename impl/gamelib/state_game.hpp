@@ -28,6 +28,9 @@ private:
 
     std::shared_ptr<Ball> m_ball { nullptr };
 
+    std::shared_ptr<jt::Shape> m_PaddleLeft;
+    std::shared_ptr<jt::Shape> m_PaddleRight;
+
     bool m_running { false };
     bool m_hasEnded { false };
 
