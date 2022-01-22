@@ -19,9 +19,9 @@ public:
     static float GetZoom() { return 2.0f; }
     static jt::Vector2f GetScreenSize() { return GetWindowSize() * (1.0f / GetZoom()); }
 
-    static jt::Color PaletteBackground() { return GP::getPalette().getColor(5); }
-    static jt::Color PaletteFontFront() { return GP::getPalette().getColor(3); }
-    static jt::Color PaletteFontShadow() { return GP::getPalette().getColor(6); }
+    static jt::Color PaletteBackground() { return GP::getPalette().getColor(2); }
+    static jt::Color PaletteFontFront() { return GP::getPalette().getColor(7); }
+    static jt::Color PaletteFontShadow() { return GP::getPalette().getColor(1); }
 
     static jt::Palette getPalette();
 

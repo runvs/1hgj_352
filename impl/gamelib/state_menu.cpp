@@ -11,6 +11,7 @@
 #include "shape.hpp"
 #include "sprite.hpp"
 #include "state_game.hpp"
+#include "state_manager/state_manager_transition_fade_to_black.hpp"
 #include "text.hpp"
 #include "tweens/tween_alpha.hpp"
 #include "tweens/tween_position.hpp"
@@ -26,6 +27,10 @@ void StateMenu::doInternalCreate()
     createTweens();
 
     add(std::make_shared<jt::LicenseInfo>());
+
+    getGame()->getStateManager().setTransition(
+        std::make_shared<jt::StateManagerTransitionFadeToBlack>(
+            jt::Vector2f { 400.0f, 300.0f }, getGame()->gfx().textureManager()));
 }
 
 void StateMenu::createVignette()
@@ -37,7 +42,7 @@ void StateMenu::createVignette()
 void StateMenu::createShapes()
 {
     m_background = jt::dh::createShapeRect(
-        GP::GetScreenSize(), GP::getPalette().getColor(0), getGame()->gfx().textureManager());
+        GP::GetScreenSize(), GP::PaletteBackground(), getGame()->gfx().textureManager());
     m_overlay = jt::dh::createShapeRect(
         GP::GetScreenSize(), jt::colors::Black, getGame()->gfx().textureManager());
 }
@@ -177,7 +182,8 @@ void StateMenu::startTransitionToStateGame()
     if (!m_started) {
         m_started = true;
 
-        createTweenTransition();
+        //        createTweenTransition();
+        getGame()->getStateManager().switchState(std::make_shared<StateGame>());
     }
 }
 
@@ -185,8 +191,7 @@ void StateMenu::createTweenTransition()
 {
     auto tw = jt::TweenAlpha::create(m_overlay, 0.5f, std::uint8_t { 0 }, std::uint8_t { 255 });
     tw->setSkipFrames();
-    tw->addCompleteCallback(
-        [this]() { getGame()->getStateManager().switchState(std::make_shared<StateGame>()); });
+    tw->addCompleteCallback([this]() {});
     add(tw);
 }
 

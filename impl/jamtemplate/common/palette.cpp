@@ -54,6 +54,7 @@ std::vector<jt::Color> parseGPLImpl(std::string const& input)
 {
     std::istringstream ss { input };
     std::string line;
+
     // ignore first line
     std::getline(ss, line);
 
