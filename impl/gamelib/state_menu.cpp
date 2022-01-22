@@ -57,8 +57,8 @@ void StateMenu::createMenuText()
 void StateMenu::createTextCredits()
 {
     m_text_Credits = jt::dh::createText(getGame()->gfx().target(),
-        "Created by " + GP::AuthorName() + " for " + GP::JamName() + "\n" + GP::JamDate()
-            + "\n\nF9 for License Information",
+        "A/D for paddle commands.\nCreated by " + GP::AuthorName() + " for " + GP::JamName() + "\n"
+            + GP::JamDate() + "\n\nF9 for License Information",
         10U, GP::getPalette().getColor(4));
     m_text_Credits->setTextAlign(jt::Text::TextAlign::LEFT);
     m_text_Credits->setPosition({ 10, GP::GetScreenSize().y - 70 });

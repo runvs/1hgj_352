@@ -122,9 +122,9 @@ void StateGame::doInternalUpdate(float const elapsed)
             if (bp.y > pp.y && bp.y < pp.y + m_PaddleLeft->getGlobalBounds().height) {
                 if (bp.x > pp.x && bp.x < pp.x + m_PaddleLeft->getGlobalBounds().width) {
                     auto oldV = m_ball->getVelocity();
-                    float vxOffset = jt::Random::getFloatGauss(-10, 5);
+                    float vxOffset = jt::Random::getFloatGauss(90, 20);
                     if (oldV.y > 0) {
-                        oldV.y = -oldV.y - jt::Random::getFloatGauss(+10, 5);
+                        oldV.y = -oldV.y - jt::Random::getFloatGauss(+30, 20);
                     } else {
                         oldV.y = -200;
                     }
@@ -132,16 +132,16 @@ void StateGame::doInternalUpdate(float const elapsed)
                 }
             }
         }
-        
+
         if (getGame()->input().keyboard()->justPressed(jt::KeyCode::D)) {
             m_PaddleRight->flash(0.4f, GP::getPalette().getColor(4));
             auto const pp = m_PaddleRight->getPosition();
             if (bp.y > pp.y && bp.y < pp.y + m_PaddleRight->getGlobalBounds().height) {
                 if (bp.x > pp.x && bp.x < pp.x + m_PaddleRight->getGlobalBounds().width) {
                     auto oldV = m_ball->getVelocity();
-                    float vxOffset = jt::Random::getFloatGauss(+10, 5);
+                    float vxOffset = jt::Random::getFloatGauss(-90, 20);
                     if (oldV.y > 0) {
-                        oldV.y = -oldV.y - jt::Random::getFloatGauss(+10, 5);
+                        oldV.y = -oldV.y - jt::Random::getFloatGauss(+30, 20);
                     } else {
                         oldV.y = -200;
                     }

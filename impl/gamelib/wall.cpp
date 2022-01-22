@@ -21,9 +21,9 @@ void Wall::doCreate()
     fixtureDef.density = 1.0f;
     fixtureDef.friction = 5.0f;
     fixtureDef.restitution = 0.8f;
-    b2PolygonShape boxCollider {};
-    boxCollider.SetAsBox(8, 8);
-    fixtureDef.shape = &boxCollider;
+    b2CircleShape circleCollider {};
+    circleCollider.m_radius = 9.0f;
+    fixtureDef.shape = &circleCollider;
     getB2Body()->CreateFixture(&fixtureDef);
 }
 
