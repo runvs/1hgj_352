@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.19)
-set(PROJECTNAME "MyAwesomeGame")
+set(PROJECTNAME "1hgj352")
 project(${PROJECTNAME})
 
 ## Helper Functions
@@ -93,7 +93,6 @@ endif ()
 ## setup Projects
 #####################################################
 add_subdirectory(impl)
-add_subdirectory(test)
 
 ## copy .clang-format to build directory
 #####################################################
