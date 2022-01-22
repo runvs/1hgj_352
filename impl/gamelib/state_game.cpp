@@ -72,15 +72,18 @@ void StateGame::createWalls()
         // ceiling
         createWall(jt::Vector2f { i_as_float * 16.0f, 0.0f });
 
-        // floor layers
-        createWall(jt::Vector2f { i_as_float * 16.0f, 320.0f });
-        createWall(jt::Vector2f { i_as_float * 16.0f, 320.0f - 16.0f });
-        createWall(jt::Vector2f { i_as_float * 16.0f, 320.0f - 32.0f });
+        if (i < 5 || i > 13) {
 
+            // floor
+            createWall(jt::Vector2f { i_as_float * 16.0f, 400.0f - 16.0f });
+        }
+    }
+    for (int i = 0; i != 30; ++i) {
         // walls
+        auto const i_as_float = static_cast<float>(i);
 
         createWall(jt::Vector2f { 0.0f, 16.0f * i_as_float });
-        createWall(jt::Vector2f { 400.0f - 16.0f, 16.0f * i_as_float });
+        createWall(jt::Vector2f { 300.0f - 16.0f, 16.0f * i_as_float });
     }
 }
 
@@ -108,6 +111,10 @@ void StateGame::doInternalUpdate(float const elapsed)
             m_scoreP2++;
             m_hud->getObserverScoreP2()->notify(m_scoreP2);
         }
+
+        if (m_ball->getPosition().y > GP::GetScreenSize().y + 32) {
+            endGame();
+        }
     }
 
     m_background->update(elapsed);
@@ -134,10 +141,6 @@ void StateGame::endGame()
     m_hasEnded = true;
     m_running = false;
 
-    auto tw = jt::TweenAlpha::create(m_overlay, 0.5f, std::uint8_t { 0 }, std::uint8_t { 255 });
-    tw->setSkipFrames();
-    tw->addCompleteCallback(
-        [this]() { getGame()->getStateManager().switchState(std::make_shared<StateMenu>()); });
-    add(tw);
+    getGame()->getStateManager().switchState(std::make_shared<StateMenu>());
 }
 std::string StateGame::getName() const { return "Game"; }
