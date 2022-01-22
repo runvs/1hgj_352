@@ -30,7 +30,7 @@ void StateMenu::doInternalCreate()
 
     getGame()->getStateManager().setTransition(
         std::make_shared<jt::StateManagerTransitionFadeToBlack>(
-            jt::Vector2f { 400.0f, 300.0f }, getGame()->gfx().textureManager()));
+            GP::GetScreenSize(), getGame()->gfx().textureManager()));
 }
 
 void StateMenu::createVignette()

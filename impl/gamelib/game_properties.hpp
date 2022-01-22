@@ -10,12 +10,12 @@ class GP {
 public:
     GP() = delete;
 
-    static std::string GameName() { return "MyAwesomeGame"; }
-    static std::string AuthorName() { return "TODO"; }
-    static std::string JamName() { return "TODO"; }
-    static std::string JamDate() { return "TODO"; }
+    static std::string GameName() { return "Springer"; }
+    static std::string AuthorName() { return "Laguna_999"; }
+    static std::string JamName() { return "1hgj352"; }
+    static std::string JamDate() { return "2022-01-22"; }
 
-    static jt::Vector2f GetWindowSize() { return jt::Vector2f { 800, 600 }; }
+    static jt::Vector2f GetWindowSize() { return jt::Vector2f { 600, 800 }; }
     static float GetZoom() { return 2.0f; }
     static jt::Vector2f GetScreenSize() { return GetWindowSize() * (1.0f / GetZoom()); }
 

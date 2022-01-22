@@ -1,6 +1,7 @@
 ﻿#ifndef GAME_STATE_GAME_HPP_INCLUDEGUARD
 #define GAME_STATE_GAME_HPP_INCLUDEGUARD
 
+#include "ball.hpp"
 #include "box2dwrapper/box2d_world_interface.hpp"
 #include "game_state.hpp"
 #include <memory>
@@ -25,6 +26,8 @@ private:
     std::shared_ptr<Hud> m_hud;
     std::shared_ptr<jt::Box2DWorldInterface> m_world { nullptr };
 
+    std::shared_ptr<Ball> m_ball { nullptr };
+
     bool m_running { false };
     bool m_hasEnded { false };
 
@@ -36,6 +39,9 @@ private:
     void doInternalDraw() const override;
 
     void endGame();
+    void createBall();
+    void createWall(jt::Vector2f const& pos);
+    void createWalls();
 };
 
 #endif

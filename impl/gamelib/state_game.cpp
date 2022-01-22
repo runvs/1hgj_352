@@ -8,10 +8,11 @@
 #include "sprite.hpp"
 #include "state_menu.hpp"
 #include "tweens/tween_alpha.hpp"
+#include "wall.hpp"
 
 void StateGame::doInternalCreate()
 {
-    m_world = std::make_shared<jt::Box2DWorldImpl>(jt::Vector2f { 0.0f, 0.0f });
+    m_world = std::make_shared<jt::Box2DWorldImpl>(jt::Vector2f { 0.0f, 100.0f });
 
     float const w = static_cast<float>(GP::GetWindowSize().x);
     float const h = static_cast<float>(GP::GetWindowSize().y);
@@ -45,8 +46,53 @@ void StateGame::doInternalCreate()
     m_hud = std::make_shared<Hud>();
     add(m_hud);
 
+    createBall();
+
+    createWalls();
+
     // StateGame will call drawObjects itself.
     setAutoDraw(false);
+}
+
+void StateGame::createWall(jt::Vector2f const& pos)
+{
+    b2BodyDef groundBodyDef;
+    groundBodyDef.fixedRotation = true;
+    groundBodyDef.position = jt::Conversion::vec(pos);
+    auto w = std::make_shared<Wall>(m_world, &groundBodyDef);
+    add(w);
+}
+
+void StateGame::createWalls()
+{
+    b2BodyDef groundBodyDef;
+    groundBodyDef.fixedRotation = true;
+    for (int i = 0; i != 30; ++i) {
+        auto const i_as_float = static_cast<float>(i);
+        // ceiling
+        createWall(jt::Vector2f { i_as_float * 16.0f, 0.0f });
+
+        // floor layers
+        createWall(jt::Vector2f { i_as_float * 16.0f, 320.0f });
+        createWall(jt::Vector2f { i_as_float * 16.0f, 320.0f - 16.0f });
+        createWall(jt::Vector2f { i_as_float * 16.0f, 320.0f - 32.0f });
+
+        // walls
+
+        createWall(jt::Vector2f { 0.0f, 16.0f * i_as_float });
+        createWall(jt::Vector2f { 400.0f - 16.0f, 16.0f * i_as_float });
+    }
+}
+
+void StateGame::createBall()
+{
+    b2BodyDef bodyDef;
+    bodyDef.fixedRotation = true;
+    bodyDef.type = b2_dynamicBody;
+    bodyDef.position.Set(100.0f, 100.0f);
+
+    m_ball = std::make_shared<Ball>(m_world, &bodyDef);
+    add(m_ball);
 }
 
 void StateGame::doInternalUpdate(float const elapsed)
@@ -73,6 +119,7 @@ void StateGame::doInternalDraw() const
 {
     m_background->draw(getGame()->gfx().target());
     drawObjects();
+    m_ball->draw();
     m_vignette->draw(getGame()->gfx().target());
     m_hud->draw();
     m_overlay->draw(getGame()->gfx().target());
